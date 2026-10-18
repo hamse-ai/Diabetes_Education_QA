@@ -49,7 +49,7 @@
 
 ## 5:20–6:50 — App workflow and examples
 
-**On screen:** open the deployed app at **[PUBLIC APP URL]** if live. Otherwise run `streamlit run app/streamlit_app.py` and say explicitly that this is a local prototype.
+**On screen:** open the deployed app at [diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app](https://diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app/).
 
 1. Ask: **“What does diabetes mean?”** Show the answer, source link, and similarity. Explain that the user should verify the old recorded source.
 2. Ask: **“What is low blood sugar, and what symptoms can it cause?”** The model retrieves a general diabetes-symptom answer at about 0.552. Explain why the topic overlap does not answer the question.
@@ -81,7 +81,7 @@
 
 ## Before recording
 
-- Replace the repository and app placeholders only after the links work; otherwise demonstrate the app locally and identify it as local.
+- Confirm the public app link loads before recording; the project owner currently reports it is working.
 - Keep the prototype warning visible and use only the prepared example prompts.
 - Open the notebook, `src/retrieval.py`, model results, evaluation files, and app before recording.
 - Be prepared to explain the shared encoder, pooling and normalization, cosine ranking, in-batch negatives, split design, and why retrieval metrics do not measure medical correctness.

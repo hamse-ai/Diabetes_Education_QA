@@ -11,7 +11,7 @@ An English-language, source-grounded question-answering capstone for basic diabe
 - Experiments: lexical TF-IDF, frozen MiniLM, and fine-tuned MiniLM compared in a question split and a source-document split. See [`reports/model_training_run_001.md`](reports/model_training_run_001.md) and [`reports/run_002_document_split.md`](reports/run_002_document_split.md).
 - Report: [`PDF`](reports/diabetes_education_qa_report.pdf) · [`Markdown source`](reports/report.md).
 - Qualitative evaluation: [`initial judgments`](reports/evaluation_draft_predictions.csv), [`15-query challenge prompts`](data/review/evaluation_challenge_set.csv), [`challenge predictions and judgments`](reports/evaluation_challenge_predictions.csv), and [`error analysis`](reports/error_analysis_draft.md). These are AI-assisted author reviews; independent and clinical review remain pending.
-- Deployment setup: [`Streamlit Community Cloud notes`](docs/deployment.md). The app is prepared but does not yet have a public URL.
+- Deployed app: [Diabetes Education QA on Streamlit Community Cloud](https://diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app/). The project owner reports that it is live and working; it remains an academic prototype, not clinically validated.
 - Candidate datasets and sources: [`docs/source_inventory.md`](docs/source_inventory.md).
 - No patient records or identifiable health data will be collected.
 
@@ -44,8 +44,8 @@ The submitted PDF is `reports/diabetes_education_qa_report.pdf`; its source is `
 
 ## Submission links
 
-- GitHub repository: pending publication; this directory is a local Git repository.
-- Deployed app: pending GitHub and Streamlit Community Cloud setup; see [`docs/deployment.md`](docs/deployment.md).
+- GitHub repository: [hamse-ai/Diabetes_Education_QA](https://github.com/hamse-ai/Diabetes_Education_QA).
+- Deployed app: [Streamlit Community Cloud](https://diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app/); see [`docs/deployment.md`](docs/deployment.md).
 - Demo video: pending recording; see [`reports/demo_video_script.md`](reports/demo_video_script.md).
 
 ## Safety scope
