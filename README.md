@@ -48,6 +48,12 @@ The app uses the saved MiniLM checkpoint at `reports/models/medquad_minilm_scope
 
 To rebuild the report PDF, install the `requirements.txt` dependencies and have Chrome/Chromium available, then run `python scripts/build_report_pdf.py`.
 
+## Submission links
+
+- GitHub repository: pending publication; this directory is a local Git repository.
+- Deployed app: pending GitHub and Streamlit Community Cloud setup; see [`docs/deployment.md`](docs/deployment.md).
+- Demo video: pending recording; see [`reports/demo_video_script.md`](reports/demo_video_script.md).
+
 ## Safety scope
 
 Educational information only. The app will not diagnose, interpret personal lab results, change medicines, or replace a qualified health professional. The MedQuAD candidate answers and trained checkpoint have not completed source, currentness, or clinical safety review; the app is an academic prototype and its answers must be verified against the linked source. Urgent symptoms should prompt seeking urgent local medical care.
