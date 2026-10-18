@@ -17,23 +17,15 @@ An English-language, source-grounded question-answering capstone for basic diabe
 
 The project files and app are ready for review. The answers remain unreviewed, so the prototype is not clinically validated and should not be presented as a reliable health-answering service.
 
-## Reproduce the model experiments
+## Notebook workflows
 
-Run 001 reproduces the provisional normalized-question split:
+Open the notebooks in order from JupyterLab (`jupyter lab`):
 
-```bash
-python src/train_retriever.py --include-unreviewed --split-strategy normalized_question \
-  --epochs 4 --seed 42 --output reports/models/medquad_minilm_provisional
-```
+1. [`01_dataset_audit.ipynb`](notebooks/01_dataset_audit.ipynb) explores the candidate and review datasets.
+2. [`02_train_retriever.ipynb`](notebooks/02_train_retriever.ipynb) compares TF-IDF, frozen MiniLM, and a fine-tuned retriever cell by cell. The completed `v003` run is saved under `reports/models/`; the existing `v001` and `v002` checkpoints are retained.
+3. [`03_evaluation_review.ipynb`](notebooks/03_evaluation_review.ipynb) regenerates a separate v003 prediction file, then displays retrieval scores and the human-review queue.
 
-Run 002 uses the topic-only scope draft and holds out source documents:
-
-```bash
-python src/train_retriever.py --include-unreviewed --scope-draft-only --split-strategy doc_id \
-  --epochs 4 --seed 42 --output reports/models/medquad_minilm_scope_docsplit_v002
-```
-
-Both commands explicitly train on unreviewed candidates for coursework experiments. They are not a path to clinical approval. Recreate the draft rankings for human adjudication with `python src/evaluate_draft_set.py`.
+The current dataset has not passed source, currentness, or clinical safety review. The training notebook labels runs provisional and uses a separate output directory. Change its `RUN_NAME` for each additional run; it refuses to overwrite an existing directory.
 
 ## Setup
 
@@ -44,7 +36,7 @@ pip install -r requirements.txt
 streamlit run app/streamlit_app.py
 ```
 
-The app uses the saved MiniLM checkpoint at `reports/models/medquad_minilm_scope_docsplit_v002/model/` and the scope-screened rows in `data/review/`. Keep those paths intact. The checkpoint is about 88 MB.
+The app now uses the notebook-trained checkpoint at `reports/models/medquad_minilm_scope_docsplit_notebook_v003/model/` and the scope-screened rows in `data/review/`.
 
 To rebuild the report PDF, install the `requirements.txt` dependencies and have Chrome/Chromium available, then run `python scripts/build_report_pdf.py`.
 

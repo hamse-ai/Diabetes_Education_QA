@@ -70,6 +70,8 @@ Run 001 uses all 175 unreviewed candidate rows and partitions normalized questio
 
 In each run, fine-tuning ranks an associated answer above the baselines more often. The runs use different candidate rows and different split strategies, so their numbers should not be read as a direct before-and-after comparison. Run 002 has only 13 test queries drawn from seven test pages; one query changes Recall@1 by about 0.077. The gains are encouraging for retrieval-method development, but the sample is too small and unreviewed to support a reliability claim.
 
+A notebook-based Run 003 repeated the same source-document split, scope-screened candidates, hyperparameters, and seed as Run 002. It reproduced the metrics and draft top-ranked predictions exactly. This is a reproducibility check, not independent evidence. The app now loads the Run 003 checkpoint; the earlier run artifacts remain available for comparison.
+
 ## 6. Evaluation and error analysis
 
 Recall@1 measures how often an associated answer is ranked first; Recall@3 checks whether one appears in the first three; mean reciprocal rank rewards higher positions and penalizes misses. These metrics evaluate retrieval against the dataset's QA associations. They do not measure whether the answer is medically correct, current, understandable, or safe.

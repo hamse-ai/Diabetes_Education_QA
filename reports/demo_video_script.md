@@ -39,7 +39,7 @@
 
 “On the stricter, scope-screened source-document split, TF-IDF had Recall@1 of 0.154, frozen MiniLM had 0.231, and fine-tuned MiniLM had 0.462. The fine-tuned system retrieved an associated answer first for 6 of 13 test questions and in the top three for 8 of 13; its MRR was 0.587.
 
-“This suggests fine-tuning improves ranking on these examples. The test set is small—13 queries from seven held-out pages—so one query changes Recall@1 by about 0.077. These are dataset-association metrics, not medical accuracy or safety scores. Run 001 used a different dataset and question split, so I don’t treat its scores as a direct comparison to run 002.”
+“This suggests fine-tuning improves ranking on these examples. The test set is small—13 queries from seven held-out pages—so one query changes Recall@1 by about 0.077. These are dataset-association metrics, not medical accuracy or safety scores. Run 001 used a different dataset and question split, so I don’t treat its scores as a direct comparison to run 002. I reran the run 002 setup cell by cell in the training notebook as run 003; it reproduced the metrics and draft rankings exactly, and the app now uses that notebook checkpoint.”
 
 ## 4:55–6:35 — App workflow and examples
 

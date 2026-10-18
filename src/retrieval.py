@@ -9,7 +9,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL_DIR = ROOT / "reports/models/medquad_minilm_scope_docsplit_v002/model"
+MODEL_DIR = ROOT / "reports/models/medquad_minilm_scope_docsplit_notebook_v003/model"
 QUEUE_PATH = ROOT / "data/review/medquad_review_queue.csv"
 SCOPE_PATH = ROOT / "data/review/medquad_scope_screen.csv"
 SIMILARITY_THRESHOLD = 0.50
