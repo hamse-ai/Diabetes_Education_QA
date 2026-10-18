@@ -1,0 +1,34 @@
+{
+  "data_status": "provisional_unreviewed",
+  "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "seed": 42,
+  "device": "cpu",
+  "input_rows": 175,
+  "unique_queries": 112,
+  "train_query_count": 89,
+  "test_query_count": 23,
+  "contrastive_training_pairs": 69,
+  "epochs": 4,
+  "train_loss": 0.3550885452164544,
+  "results": {
+    "tfidf_word_ngrams": {
+      "recall_at_1": 0.043478260869565216,
+      "recall_at_3": 0.21739130434782608,
+      "mrr": 0.19597066030145222,
+      "n_queries": 23
+    },
+    "minilm_frozen": {
+      "recall_at_1": 0.13043478260869565,
+      "recall_at_3": 0.43478260869565216,
+      "mrr": 0.32737950335488486,
+      "n_queries": 23
+    },
+    "minilm_finetuned": {
+      "recall_at_1": 0.30434782608695654,
+      "recall_at_3": 0.5217391304347826,
+      "mrr": 0.4585098616105481,
+      "n_queries": 23
+    }
+  },
+  "notes": "Candidate answers are retrieved verbatim with source metadata. Provisional run is for method development only and is not medical validation."
+}

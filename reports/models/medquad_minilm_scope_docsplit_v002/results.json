@@ -1,0 +1,48 @@
+{
+  "data_status": "provisional_unreviewed",
+  "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "seed": 42,
+  "device": "cpu",
+  "input_rows": 156,
+  "unique_queries": 99,
+  "train_query_count": 86,
+  "test_query_count": 13,
+  "train_document_count": 28,
+  "test_document_count": 7,
+  "split_strategy": "doc_id",
+  "scope_draft_only": true,
+  "contrastive_training_pairs": 61,
+  "epochs": 4,
+  "train_loss": 0.42415789887309074,
+  "results": {
+    "tfidf_word_ngrams": {
+      "recall_at_1": 0.15384615384615385,
+      "recall_at_3": 0.38461538461538464,
+      "mrr": 0.3047672070866434,
+      "n_queries": 13
+    },
+    "minilm_frozen": {
+      "recall_at_1": 0.23076923076923078,
+      "recall_at_3": 0.46153846153846156,
+      "mrr": 0.3918663756415612,
+      "n_queries": 13
+    },
+    "minilm_finetuned": {
+      "recall_at_1": 0.46153846153846156,
+      "recall_at_3": 0.6153846153846154,
+      "mrr": 0.586993006993007,
+      "n_queries": 13
+    }
+  },
+  "notes": "Candidate answers are retrieved verbatim with source metadata. Provisional run is for method development only and is not medical validation.",
+  "python_version": "3.13.5",
+  "package_versions": {
+    "torch": "2.14.1+cpu",
+    "sentence-transformers": "5.7.0",
+    "transformers": "5.20.1",
+    "scikit-learn": "1.9.1",
+    "numpy": "2.5.4",
+    "datasets": "4.8.5",
+    "accelerate": "1.15.0"
+  }
+}

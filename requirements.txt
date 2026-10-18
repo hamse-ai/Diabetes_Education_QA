@@ -1,0 +1,8 @@
+sentence-transformers==5.7.0
+scikit-learn==1.9.1
+datasets==4.8.5
+accelerate==1.15.0
+torch==2.14.1
+transformers==5.20.1
+streamlit>=1.38,<2
+markdown-it-py>=3,<5
