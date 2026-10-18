@@ -1,75 +1,88 @@
 # Demo video script — Diabetes Education QA for Adults
 
-**Target length:** about 8 minutes 30 seconds.  
-**Recording status:** script and local Streamlit app are ready. Replace `[PUBLIC APP URL]` and `[GITHUB REPOSITORY]` after the accounts are connected and deployment is complete. Do not imply the app is publicly deployed until the URL works.
+**Target length:** about 9 minutes.
+**Recording status:** not recorded. Do not claim public deployment until the deployed URL works. The app can be demonstrated locally.
 
-## 0:00–0:40 — Introduction
+## 0:00–0:35 — Introduction
 
-**On screen:** title slide or project README.
+**On screen:** title slide or README.
 
-“This project is an English-language question-answering prototype for basic diabetes education for adults. Given a question, it retrieves an existing answer from a source-linked collection and shows where that answer came from. It does not generate medical advice or diagnose anyone. I’ll explain the data, compare three retrieval approaches, then show how the app handles an ordinary question, a retrieval mistake, and a safety-boundary question.”
+“This is an English-language question-answering prototype for basic diabetes education for adults. It retrieves a stored answer from a source-linked collection rather than generating new text. I’ll explain the data and model, show how fine-tuning works, compare the experiments, and demonstrate both successful and failed retrievals and the app’s safety boundaries.”
 
-## 0:40–1:35 — Problem, task, and user
+## 0:35–1:20 — Problem, task, and user
 
 **On screen:** README problem and safety-scope sections.
 
-“The task is question-to-answer retrieval. The target user is an adult looking for general educational information in English. We chose retrieval because the available dataset contains question-answer pairs and source links, but does not provide the context spans and annotations needed for a conventional extractive question-answering model. A generated answer could sound fluent while adding unsupported details; here, the system returns a stored candidate and exposes its source.
+“The task is question-to-answer retrieval for adults looking for general diabetes education. We chose retrieval because MedQuAD provides question-answer records and source links, but not the context-span annotations needed to train an extractive question-answering model. Retrieval lets us return the stored passage and expose its provenance instead of composing an answer that may add unsupported information.
 
-“The boundaries matter: it should not diagnose diabetes, interpret a personal glucose result, or tell someone how to change medicine. Urgent symptoms should lead to local emergency care.”
+“The intended system does not diagnose, interpret personal results, or recommend treatment changes. Urgent symptoms should be directed to local emergency care.”
 
-## 1:35–2:35 — Dataset and preparation
+## 1:20–2:15 — Dataset and preparation
 
-**On screen:** `docs/medquad_audit.md`, then `data/review/medquad_scope_screen.csv` and `docs/data_review_status.md`.
+**On screen:** `docs/medquad_audit.md`, `data/review/medquad_scope_screen.csv`, and `docs/data_review_status.md`.
 
-“The dataset is MedQuAD, a public English medical QA collection described by Ben Abacha and Demner-Fushman. Its repository advertises 47,457 pairs. The pinned copy we inspected contained 47,441, a 16-pair discrepancy we record in the report. Searching document focus for diabetes found 447 pairs; 170 had no answer text, leaving 277 answer-bearing candidates.
+“MedQuAD is a public English medical question-answer collection. Its repository reports 47,457 pairs. The pinned snapshot we inspected contained 47,441, so we record that 16-pair discrepancy. The diabetes-focus filter found 447 records: 170 had no answer text and 277 had answers.
 
-“After a first-pass scope filter and exact question-answer de-duplication, the review queue had 175 rows and 112 normalized unique questions. A topic-only screen provisionally keeps 156 and flags 19 for exclusion confirmation. These are not medically approved examples. We grouped the queue into 42 source pages, because source-page checks can then be done once before reviewing their individual answers. The remaining source, currentness, and safety review is documented as pending.”
+“After exact question-answer de-duplication, the review queue had 175 rows and 112 normalized unique questions. A topic-only screen provisionally kept 156 and flagged 19 for confirmation. These rows have not passed answer-level source, currentness, or safety review. We grouped them by source page to make provenance review easier.”
 
-## 2:35–3:45 — Model architecture and training
+## 2:15–4:15 — Model architecture, data flow, and training
 
-**On screen:** `src/train_retriever.py`, then `src/retrieval.py`.
+**On screen:** `notebooks/02_train_retriever.ipynb` (cells for the split, pairs, baselines, and training); then `src/retrieval.py` and the saved model’s `modules.json`.
 
-“The system compares three approaches. First, TF-IDF word unigrams and bigrams provide a simple lexical baseline. Second, the frozen `all-MiniLM-L6-v2` sentence encoder maps the question and candidate answers into 384-dimensional vectors. The Transformer creates contextual token representations; sentence-transformers pools them into one normalized vector, and we rank answers with cosine similarity.
+“The serving model is `sentence-transformers/all-MiniLM-L6-v2`. It uses a shared six-layer Transformer sentence encoder for both the user question and each stored answer. The tokenizer converts text into token IDs. The Transformer produces contextual token representations; mean pooling combines those into a 384-dimensional sentence vector, and the model normalizes the vector.
 
-“For the adapted model, the input pair is a question anchor and its matching answer as the positive. MultipleNegativesRankingLoss pushes that pair together relative to other answers in the batch. We trained for four epochs with batch size 8, learning rate 2e-5, AdamW, and seed 42 on CPU. In the document-split experiment, seven entire source pages were held out. Repeated normalized questions from those pages were purged from training.”
+“At inference, the app encodes the question, compares it with precomputed answer vectors using a dot product, and returns the highest-ranked stored answer with its topic and source link. Because the vectors are normalized, the dot product is cosine similarity. The score is a ranking signal, not a probability or correctness estimate. The model retrieves whole stored answers; it does not generate text or compare the question and answer through a cross-encoder.
 
-## 3:45–4:55 — Results and interpretation
+“We compared three approaches. TF-IDF over word unigrams and bigrams is the lexical baseline. Frozen MiniLM tests the pretrained encoder without task-specific updates. Fine-tuned MiniLM tests whether adapting that same encoder to question-to-answer pairs improves ranking.
 
-**On screen:** `reports/run_002_document_split.md` results table.
+“For training, each example is a question anchor paired with its known answer as the positive. `MultipleNegativesRankingLoss` encourages the paired question and answer to be close while treating the other answers in the batch as negatives. With batch size 8, each anchor has up to seven in-batch negatives. That is efficient, but a semantically valid alternative answer could be treated as a negative, one reason to interpret the results cautiously. We trained the encoder for four epochs with learning rate 2e-5, AdamW, weight decay 0.01, and seed 42 on CPU. There is no task-specific classification head.
 
-“On the stricter, scope-screened source-document split, TF-IDF had Recall@1 of 0.154, frozen MiniLM had 0.231, and fine-tuned MiniLM had 0.462. The fine-tuned system retrieved an associated answer first for 6 of 13 test questions and in the top three for 8 of 13; its MRR was 0.587.
+“The source-document split kept seven documents and 13 questions for test and removed repeated normalized test questions from the training partition. Training used 61 unambiguous pairs. At retrieval time the full candidate index is available, as it would be in the app; held-out documents were excluded from training, not removed from the searchable answer collection.”
 
-“This suggests fine-tuning improves ranking on these examples. The test set is small—13 queries from seven held-out pages—so one query changes Recall@1 by about 0.077. These are dataset-association metrics, not medical accuracy or safety scores. Run 001 used a different dataset and question split, so I don’t treat its scores as a direct comparison to run 002. I reran the run 002 setup cell by cell in the training notebook as run 003; it reproduced the metrics and draft rankings exactly, and the app now uses that notebook checkpoint.”
+## 4:15–5:20 — Results and interpretation
 
-## 4:55–6:35 — App workflow and examples
+**On screen:** `reports/run_002_document_split.md` or the `results.json` for notebook Run 003.
 
-**On screen:** open the deployed app at **[PUBLIC APP URL]**. If deployment is still pending, run `streamlit run app/streamlit_app.py` from the project root and demonstrate locally; say clearly that it is a local prototype.
+“On the source-document split, TF-IDF had Recall@1 of 0.154, frozen MiniLM 0.231, and fine-tuned MiniLM 0.462. Fine-tuning retrieved an associated answer first for 6 of 13 queries and in the top three for 8 of 13; MRR was 0.587.
 
-1. Ask: **“What does diabetes mean?”** Show the retrieved definition, semantic similarity value, and recorded source link. Explain that the score is a ranking signal, not a probability.
-2. Ask: **“What is low blood sugar, and what symptoms can it cause?”** The current model retrieves a general diabetes-symptom answer at similarity 0.552. Point out that the answer is related but may not answer the hypoglycemia question well. This is a real retrieval error, and the 0.50 display threshold does not catch it.
-3. Ask: **“How many units of insulin should I take tonight with this glucose reading?”** Show the app declining to recommend a dose and directing the user to a qualified health professional.
-4. Ask: **“What should I do if I am vomiting and have deep, rapid breathing?”** Show the emergency redirect. The app is not trying to manage the situation in chat.
+“This indicates better ranking on this small split, not better medical correctness. One query changes Recall@1 by about 0.077. Run 001 used a different split and candidate set, so I don’t compare its scores as if it were the same test. Notebook Run 003 repeats Run 002’s setup and reproduces its metrics; that checks reproducibility, not independent generalization.”
 
-“Every returned answer is labelled as an unreviewed candidate and includes its recorded source. The stored source links can be old, so the user must verify them. The current app is a classroom prototype, not a service for care.”
+## 5:20–6:50 — App workflow and examples
 
-## 6:35–7:30 — Error analysis and limitations
+**On screen:** open the deployed app at **[PUBLIC APP URL]** if live. Otherwise run `streamlit run app/streamlit_app.py` and say explicitly that this is a local prototype.
 
-**On screen:** `reports/error_analysis_draft.md` and `reports/evaluation_draft_predictions.csv`.
+1. Ask: **“What does diabetes mean?”** Show the answer, source link, and similarity. Explain that the user should verify the old recorded source.
+2. Ask: **“What is low blood sugar, and what symptoms can it cause?”** The model retrieves a general diabetes-symptom answer at about 0.552. Explain why the topic overlap does not answer the question.
+3. Ask: **“How is high blood pressure treated?”** The challenge run shows an unrelated diabetes/heart-disease passage at about 0.507, just above the 0.50 display threshold. Explain this false accept and that the threshold is provisional.
+4. Ask: **“How many units of insulin should I take tonight with this glucose reading?”** Show the personal-dose guardrail response.
+5. Ask: **“What should I do if I am vomiting and have deep, rapid breathing?”** Show the emergency response directing the user to local emergency care.
 
-“The draft evaluation exposes a pattern: semantically related answers can still miss the requested topic. The A1C query retrieves a broad diabetes-management answer that happens to contain A1C information. The hypoglycemia prompt retrieves general diabetes symptoms. An emergency DKA question ranks a kidney-disease answer, although the app's phrase rule redirects this particular wording before retrieval.
+“The app displays stored candidate text, provenance, and a warning that the answer has not been independently checked. The similarity score is not medical confidence. This is an academic prototype, not a care service.”
 
-“The 15 prompts have not been independently adjudicated, so I report examples rather than treating them as gold accuracy results. The phrase rules cover only anticipated wording; they do not establish comprehensive safety. The dataset itself also needs answer-level checks against current pages.”
+## 6:50–7:55 — Evaluation and error analysis
 
-## 7:30–8:20 — Conclusion and next work
+**On screen:** `reports/error_analysis_draft.md`, `reports/evaluation_draft_predictions.csv`, and `reports/evaluation_challenge_predictions.csv`.
 
-**On screen:** report conclusion, then repository link **[GITHUB REPOSITORY]**.
+“The original 15 prompts include two clear retrieval misses: a type 1 versus type 2 question retrieves a type 2 risk answer, and a hypoglycemia question retrieves general diabetes symptoms. The 15-query challenge set adds paraphrases, unrelated topics, personal-care questions, urgent cases, and unsupported subdomains. It revealed two false accepts: high blood pressure and pregnancy-specific questions receive unrelated diabetes candidates. The A1C paraphrase is a false abstention.
 
-“The main finding is that adapting a compact sentence encoder improved retrieval ranking over both TF-IDF and a frozen encoder on our small exploratory split. The main weakness is that retrieval can surface the wrong diabetes topic, and the data has not completed currentness or safety review. Next I would review the source pages and answers, expand and adjudicate the held-out evaluation set, then recalibrate abstention and rerun the experiments. This project demonstrates a retrieval method and its limitations; it does not demonstrate clinically reliable advice.”
+“These are hand-authored, AI-assisted author-review judgments, not independent or clinical labels. The samples are too small to estimate real-world error or safety rates. They do show why retrieval relevance, source support, and boundary routing need separate evaluation.”
+
+## 7:55–8:35 — Limitations and next work
+
+**On screen:** report limitations and review-status documentation.
+
+“The most important limitation is the data: source support, currentness, and clinical safety review are incomplete. The evaluation samples are small and hand-authored, and similarity thresholding misses both unsupported-domain questions and some valid paraphrases. Next steps are independent review of answers and evaluation labels, a larger paraphrased and out-of-scope test set, validation-based threshold selection, and rerunning experiments on approved data.”
+
+## 8:35–9:00 — Conclusion
+
+**On screen:** report conclusion and repository link **[GITHUB REPOSITORY]**.
+
+“Fine-tuning improved retrieval ranking over TF-IDF and frozen MiniLM on our exploratory source-document split. But relevant-sounding retrieval can still be wrong, and the content is not clinically validated. This project demonstrates a compact retrieval method and a careful analysis of its limits; it does not demonstrate reliable medical advice.”
 
 ## Before recording
 
-- Replace both bracketed links only after they are live.
-- Keep the app warning visible and do not enter real personal health information.
-- Open the report, model script, data review status, evaluation outputs, and app before recording.
-- Record one uninterrupted pass and time it; aim for 8–9 minutes.
-- Be prepared to explain why Recall@1/3 and MRR fit retrieval, why similarity is not probability, how document grouping reduces leakage, and why the current results do not show medical safety.
+- Replace the repository and app placeholders only after the links work; otherwise demonstrate the app locally and identify it as local.
+- Keep the prototype warning visible and use only the prepared example prompts.
+- Open the notebook, `src/retrieval.py`, model results, evaluation files, and app before recording.
+- Be prepared to explain the shared encoder, pooling and normalization, cosine ranking, in-batch negatives, split design, and why retrieval metrics do not measure medical correctness.
+- Avoid saying that data review, independent evaluation, clinical validation, or public deployment is complete.
