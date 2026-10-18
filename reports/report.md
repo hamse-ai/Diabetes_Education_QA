@@ -1,5 +1,11 @@
 # Diabetes Education Question Answering for Adults
 
+## Submission links
+
+- **Live app:** [Diabetes Education QA](https://diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app/)
+- **GitHub repository:** [hamse-ai/Diabetes_Education_QA](https://github.com/hamse-ai/Diabetes_Education_QA)
+- **Demo video:** [Watch the project demo on YouTube](https://youtu.be/Nop2rM8nqWY)
+
 ## Abstract
 
 This project studies source-linked question answering for basic diabetes education in English. Given a user's question, the system retrieves a candidate answer from MedQuAD rather than generating free-form medical advice. We compare a TF-IDF lexical baseline, a frozen MiniLM sentence encoder, and a contrastively fine-tuned MiniLM retriever. In a provisional query-level split, fine-tuning improves Recall@1 from 0.043 to 0.304. A second, stricter experiment uses only the scope-screened candidate subset and holds out complete source documents; fine-tuning reaches Recall@1 0.462 and MRR 0.587 on 13 held-out queries. Both datasets remain unreviewed for factual support, currentness, and clinical safety. Two separate 15-question evaluation sets have preliminary author-led relevance, answer-support, and boundary-routing judgments; independent adjudication remains pending. The Streamlit prototype is live at [diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app](https://diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app/), but it is not clinically validated or ready to guide care.

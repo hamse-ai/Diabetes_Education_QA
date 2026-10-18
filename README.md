@@ -2,6 +2,12 @@
 
 An English-language, source-grounded question-answering capstone for basic diabetes education for adults. It is presented as a general English project and is not tailored to a particular country.
 
+## Submission links
+
+- **Live app:** [Diabetes Education QA](https://diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app/)
+- **GitHub repository:** [hamse-ai/Diabetes_Education_QA](https://github.com/hamse-ai/Diabetes_Education_QA)
+- **Demo video:** [Watch on YouTube](https://youtu.be/Nop2rM8nqWY)
+
 ## Project status
 
 - Audience/domain: general basic diabetes education for adults, without country-specific framing.
@@ -11,7 +17,7 @@ An English-language, source-grounded question-answering capstone for basic diabe
 - Experiments: lexical TF-IDF, frozen MiniLM, and fine-tuned MiniLM compared in a question split and a source-document split. See [`reports/model_training_run_001.md`](reports/model_training_run_001.md) and [`reports/run_002_document_split.md`](reports/run_002_document_split.md).
 - Report: [`PDF`](reports/diabetes_education_qa_report.pdf) · [`Markdown source`](reports/report.md).
 - Qualitative evaluation: [`initial judgments`](reports/evaluation_draft_predictions.csv), [`15-query challenge prompts`](data/review/evaluation_challenge_set.csv), [`challenge predictions and judgments`](reports/evaluation_challenge_predictions.csv), and [`error analysis`](reports/error_analysis_draft.md). These are AI-assisted author reviews; independent and clinical review remain pending.
-- Deployed app: [Diabetes Education QA on Streamlit Community Cloud](https://diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app/). The project owner reports that it is live and working; it remains an academic prototype, not clinically validated.
+- Deployment: live on Streamlit Community Cloud; it remains an academic prototype, not clinically validated.
 - Candidate datasets and sources: [`docs/source_inventory.md`](docs/source_inventory.md).
 - No patient records or identifiable health data will be collected.
 
@@ -41,12 +47,6 @@ streamlit run app/streamlit_app.py
 The app now uses the notebook-trained checkpoint at `reports/models/medquad_minilm_scope_docsplit_notebook_v003/model/` and the scope-screened rows in `data/review/`.
 
 The submitted PDF is `reports/diabetes_education_qa_report.pdf`; its source is `reports/report.md`.
-
-## Submission links
-
-- GitHub repository: [hamse-ai/Diabetes_Education_QA](https://github.com/hamse-ai/Diabetes_Education_QA).
-- Deployed app: [Streamlit Community Cloud](https://diabeteseducationapp-sbpdn6uqm8uckexptjvqm3.streamlit.app/); see [`docs/deployment.md`](docs/deployment.md).
-- Demo video: pending recording; see [`reports/demo_video_script.md`](reports/demo_video_script.md).
 
 ## Safety scope
 

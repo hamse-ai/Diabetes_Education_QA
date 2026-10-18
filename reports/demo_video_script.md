@@ -75,7 +75,7 @@
 
 ## 8:35–9:00 — Conclusion
 
-**On screen:** report conclusion and repository link **[GITHUB REPOSITORY]**.
+**On screen:** report conclusion and repository link [hamse-ai/Diabetes_Education_QA](https://github.com/hamse-ai/Diabetes_Education_QA).
 
 “Fine-tuning improved retrieval ranking over TF-IDF and frozen MiniLM on our exploratory source-document split. But relevant-sounding retrieval can still be wrong, and the content is not clinically validated. This project demonstrates a compact retrieval method and a careful analysis of its limits; it does not demonstrate reliable medical advice.”
 
